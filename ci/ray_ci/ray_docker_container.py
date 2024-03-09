@@ -60,7 +60,7 @@ class RayDockerContainer(DockerContainer):
             return False
         if os.environ.get("BUILDKITE_PIPELINE_ID") != POSTMERGE_PIPELINE:
             return False
-        if os.environ.get("BUILDKITE_BRANCH").startswith("releases/"):
+        if os.environ.get("BUILDKITE_BRANCH", "").startswith("releases/"):
             return True
         return (
             os.environ.get("BUILDKITE_BRANCH") == "master"
