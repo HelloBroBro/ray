@@ -53,7 +53,7 @@ def strip_keys_with_value_none(d: Dict[str, Any]) -> Dict[str, Any]:
 
 def redact_url_password(url: str) -> str:
     """Redact any passwords in a URL."""
-    secret = re.findall("https?:\/\/.*:(.*)@.*", url)
+    secret = re.findall(r"https?:\/\/.*:(.*)@.*", url)
     if len(secret) > 0:
         url = url.replace(f":{secret[0]}@", ":<redacted>@")
 
@@ -163,7 +163,10 @@ async def get_driver_jobs(
     jobs with the job id or submission id.
     """
     job_infos = await gcs_aio_client.get_all_job_info(
-        job_or_submission_id=job_or_submission_id, timeout=timeout
+        job_or_submission_id=job_or_submission_id,
+        skip_submission_job_info_field=True,
+        skip_is_running_tasks_field=True,
+        timeout=timeout,
     )
     # Sort jobs from GCS to follow convention of returning only last driver
     # of submission job.
